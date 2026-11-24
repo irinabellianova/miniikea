@@ -2,6 +2,7 @@ import pytest
 from ssh.SshConnect import SshConnect
 from data.machines import MACHINES
 from utils.logger import setup_logging
+from mappers.LinuxMapper import LinuxMapper
 
 @pytest.fixture(params=MACHINES)
 def node(request):
@@ -11,5 +12,5 @@ def node(request):
 
     ssh = SshConnect(host, username, password)
     ssh.connect()
-    yield ssh
+    yield LinuxMapper(ssh)
     ssh.close()

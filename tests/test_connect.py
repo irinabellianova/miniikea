@@ -4,7 +4,7 @@ from ssh.SshConnect import SshConnect
 from data.machines import MACHINES
 
 def test_connect_to_node(node):
-    exit_code, out, _ = node.exec("whoami")
+    exit_code, out, _ = node.command("whoami")
     assert exit_code == 0, f"Ошибка: команда whoami вернула код {exit_code}"
     assert out.strip() == "autotest", f"Ошибка: команда whoami вернула неправильное username {out.strip()}"
 
