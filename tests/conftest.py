@@ -1,16 +1,27 @@
 import pytest
 from ssh.SshConnect import SshConnect
 from data.machines import MACHINES
-from utils.logger import setup_logging
 from mappers.LinuxMapper import LinuxMapper
 
-@pytest.fixture(params=MACHINES)
-def node(request):
-    host = request.param["host"]
-    username = request.param["username"]
-    password = request.param["password"]
-
-    ssh = SshConnect(host, username, password)
+def _make_node(m):
+    ssh = SshConnect(
+        m["host"], m["username"], m.get("password"),
+        key_filename=m.get("key_filename"),
+    )
     ssh.connect()
+    return ssh
+
+
+@pytest.fixture(params=MACHINES)
+def nodes(request):
+    ssh = _make_node(request.param)
+    yield LinuxMapper(ssh)
+    ssh.close()
+
+
+@pytest.fixture
+def node_0():
+    m = MACHINES[0]
+    ssh = _make_node(m)
     yield LinuxMapper(ssh)
     ssh.close()

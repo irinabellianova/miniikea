@@ -3,12 +3,12 @@ import pytest
 from ssh.SshConnect import SshConnect
 from data.machines import MACHINES
 
-def test_connect_to_node(node):
-    exit_code, out, _ = node.command("whoami")
-    assert exit_code == 0, f"Ошибка: команда whoami вернула код {exit_code}"
-    assert out.strip() == "autotest", f"Ошибка: команда whoami вернула неправильное username {out.strip()}"
+def test_connect_to_node(nodes):
+    exit_code, out, _ = nodes.command("tatlin-cli --version")
+    assert exit_code == 0, f"Ошибка: команда tatlin-cli --version вернула код {exit_code}"
+    assert out.strip() == "tatlin-cli version 4.1.0.v5346", f"Ошибка: команда tatlin-cli --version вернула неправильное значение {out.strip()}"
 
-@pytest.mark.parametrize("machine", MACHINES)
+@pytest.mark.parametrize("machine", [MACHINES[1]])
 def test_connect_to_node_with_wrong_password(machine):
     ssh = SshConnect(machine["host"], machine["username"], "WRONG_PASSWORD")
     with pytest.raises(ConnectionError) as exc_info:

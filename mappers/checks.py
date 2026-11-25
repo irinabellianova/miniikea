@@ -1,4 +1,5 @@
 from mappers.base import LinuxBase
 
 class Checks(LinuxBase):
-    pass
+    def md5sum(self, path):
+        return self.exec(f"md5sum {path}")
